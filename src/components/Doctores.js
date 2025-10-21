@@ -2,11 +2,13 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import Global from '../Global';
+import DetallesDoctor from './DetallesDoctor';
 export default class Doctores extends Component {
     url = Global.apiDoctores;
 
     state = {
-        doctores: []
+        doctores: [],
+        idDoctor: -1
     }
 
     loadDoctoresHospital = () => {
@@ -32,6 +34,11 @@ export default class Doctores extends Component {
   render() {
     return (
       <div>
+        {
+            this.state.idDoctor != -1 && 
+            <DetallesDoctor iddoctor={this.state.idDoctor}/>
+        }
+        
         <h2>
             Doctores hospital: 
             <span style={{color:"red"}}>
@@ -44,7 +51,7 @@ export default class Doctores extends Component {
                     <th>Apellido</th>
                     <th>Especialidad</th>
                     <th>Salario</th>
-                    <th>Id Hospital</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -54,7 +61,16 @@ export default class Doctores extends Component {
                             <td>{doctor.apellido}</td>
                             <td>{doctor.especialidad}</td>
                             <td>{doctor.salario}</td>
-                            <td>{doctor.idHospital}</td>
+                            <td>
+                                <button className='btn btn-info'
+                                onClick={() => {
+                                    this.setState({
+                                        idDoctor: doctor.idDoctor
+                                    })
+                                }}>
+                                    Detalles
+                                </button>
+                            </td>
                         </tr>)
                     })
                 }
