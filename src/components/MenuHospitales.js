@@ -1,12 +1,34 @@
+import logo from './../assets/images/spidey.jpg'
 import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
+import axios from 'axios';
+import Global from './../Global';
 
 export default class MenuHospitales extends Component {
+    url = Global.apiHospitales;
+    state = {
+        hospitales: []
+    }
+
+    loadHospitales = () => {
+        let request = "webresources/hospitales";
+        axios.get(this.url + request).then(response => {
+            console.log("Leyendo hospitales");
+            this.setState({
+                hospitales: response.data
+            })
+        })
+    }
+
+    componentDidMount = () => {
+        this.loadHospitales();
+    }
   render() {
     return (
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            Navbar
+            <img src={logo} style={{width:"40px"}}/>
           </a>
           <button
             className="navbar-toggler"
@@ -22,16 +44,12 @@ export default class MenuHospitales extends Component {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
+                <NavLink className="nav-link active" aria-current="page" 
+                to="/">
                   Home
-                </a>
+                </NavLink>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Link
-                </a>
-              </li>
-              <li className="nav-item dropdown">
+                 <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
                   href="#"
@@ -39,14 +57,19 @@ export default class MenuHospitales extends Component {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Dropdown
+                  Hospitales
                 </a>
                 <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Action
-                    </a>
-                  </li>
+                    {
+                        this.state.hospitales.map((hospital, index) => {
+                            return (<li key={index}>
+                                <NavLink className="dropdown-item" 
+                                to={"/doctores/" + hospital.idhospital}>
+                                {hospital.nombre}
+                                </NavLink>
+                            </li>)
+                        })             
+                    }
                   <li>
                     <a className="dropdown-item" href="#">
                       Another action
